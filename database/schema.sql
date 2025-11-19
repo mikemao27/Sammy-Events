@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS events (
     start_time DATE,
     end_time DATE,
     event_location TEXT,
+    free_food BOOLEAN,
 
     organization_id INTEGER,
     FOREIGN KEY (organization_id) REFERENCES organizations(id),
@@ -23,7 +24,9 @@ CREATE TABLE IF NOT EXISTS users (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     netID TEXT NOT NULL,
+    email TEXT NOT NULL,
     user_password TEXT NOT NULL,
+    phone_numbrer TEXT,
 
     degree TEXT,
 
@@ -43,8 +46,6 @@ CREATE TABLE IF NOT EXISTS organizations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     organization_description TEXT,
-
-    field TEXT NOT NULL,
 
     UNIQUE(title)
 );

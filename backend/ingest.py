@@ -11,6 +11,134 @@ OWL_NEST_RSS_URL = "https://owlnest.rice.edu/events.rss"
 def get_connection():
     return sqlite3.connect(DATABASE_PATH)
 
+def insert_academic_fields():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    academic_fields = [
+        "Rice University", "Architecture", "Business", "STEM", "Humanities and Arts", 
+        "Social Sciences", "Career and Professional", "Sports", 
+        "Community, Culture, and Identity", "Environmental and Sustainability",
+    ]
+
+    for academic_field in academic_fields:
+        cursor.execute(
+            "INSERT OR IGNORE INTO academic_fields (degree_name) VALUES (?)",
+            (academic_field,)
+        )
+    
+    connection.commit()
+    connection.close()
+
+# Organizations -> Academic Fields.
+# Rice University: 1
+# Architecture: 2
+# Business: 3
+# STEM: 4
+# Humanities and Arts: 5
+# Social Sciences: 6
+# Career and Professional: 7
+# Sports: 8
+# Community, Culture, and Identity: 9
+# Environmental and Sustainability: 10
+
+# Read the large .csv file storing all of the organizations and their academic fields.
+def read_organizations():
+    organizations = []
+    organizations_map = {}
+    with open("database/organizations.csv", "r", encoding = "utf-8") as file:
+        for line in file:
+            line = line.strip()
+        
+            if not line:
+                continue
+
+            parts = line.rsplit(":", 1)
+            organization_name = parts[0].strip()
+            organizations.append(organization_name)
+            right = parts[1].strip()
+
+            # Remember, the academic fields are a sequence of integers as a string.
+            right_split = right.split(", ")
+            academic_fields = []
+            for index in range(0, len(right_split)):
+                degree = right_split[index].strip()
+                if degree.isdigit():
+                    academic_fields.append(int(degree))
+            
+            organizations_map[organization_name] = academic_fields
+    
+    return organizations, organizations_map
+
+def parse_organizations(organizations_list):
+    organizations = []
+    for organization in organizations_list:
+        title = organization
+
+        organizations.append({
+            "title": title,
+        })
+    
+    return organizations
+
+# Insert organization names into the organization database.
+def insert_organizations(organizations):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    for organization in organizations:
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO organizations
+                (title)
+            VALUES
+                (:title)
+            """,
+            organization,
+        )
+
+    connection.commit()
+    connection.close()
+
+def get_organization_id(name):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT id FROM organizations WHERE title = ?", (name,)
+    )
+
+    result = cursor.fetchone()
+    connection.close()
+
+    if result is None:
+        return None
+    return result[0]
+
+def map_organizations(organizations_map):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    for organization in organizations_map.keys():
+        title = organization
+        academic_field_ids = organizations_map[organization]
+
+        organization_id = get_organization_id(title)
+        
+        if organization_id is None:
+            continue
+
+        for academic_field_id in academic_field_ids:
+            cursor.execute(
+                """
+                INSERT OR IGNORE INTO organization_academic_fields(organization_id, academic_field_id)
+                VALUES (?, ?)
+                """,
+                (organization_id, academic_field_id)
+            )
+        
+    connection.commit()
+    connection.close() 
 
 # Rice Events Page Helper Methods.
 def parse_events_description(html: str) -> str | None:
@@ -84,6 +212,8 @@ def parse_rss():
             "start_time": start_time,
             "end_time": end_time,
             "event_location": location,
+            "free_food": False,
+            "organization_id": 1
         })
     
     # OwlNest Events Page.
@@ -135,29 +265,21 @@ def insert_events(events):
     connection.commit()
     connection.close()
 
-def insert_academic_fields():
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    academic_fields = [
-        "Architecture", "Business", "Engineering", "Humanities and Arts",
-        "Music", "Natural Sciences", "Socal Sciences", "Education", "Civic Leadership",
-        "Naval Science"
-    ]
-
-    for academic_field in academic_fields:
-        cursor.execute(
-            "INSERT OR IGNORE INTO academic_fields (degree_name) VALUES (?)",
-            (academic_field,)
-        )
-    
-    connection.commit()
-    connection.close()
-
 if __name__ == "__main__":
     events = parse_rss()
     print(f"Fetched {len(events)} events from RSS!")
+
     insert_events(events)
     print("Events inserted into the database!")
+
     insert_academic_fields()
     print("Degrees inserted into the database!")
+
+    organizations_list, organizations_map = read_organizations()
+    organizations = parse_organizations(organizations_list)
+    insert_organizations(organizations)
+    print("Organizations inserted into the database!")
+
+    map_organizations(organizations_map)
+    print("Organizations have been mapped to their academic fields!")
+    
