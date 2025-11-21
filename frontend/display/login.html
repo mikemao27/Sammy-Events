@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Log In</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css">
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Nest</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">Log In</h1>
+            <p class = "page-subtitle">
+                Use Your Sammy's Nest Credentials to Log In
+            </p>
+
+            <div class = "form-card">
+                <form id = "login-form">
+                    <div class = "form-field">
+                        <label for = "email">Email</label>
+                        <input type = "text" id = "email" name = "email" required/>
+                    </div>
+
+                    <div class = "form-field">
+                        <label for = "password">Password</label>
+                        <input type = "text" id = "password" name = "password" required/>
+                    </div>
+
+                    <button type = "submit" class = "button">Log In</button>
+
+                    <div class = "form-footer">
+                        Create an Account to Join Sammy's Nest
+                        <a href = "signup.html">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+        <script>
+            document.getElementById("login-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({email, password}),
+                    credentials: "include",
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    alert(data.error || "Log In Failed");
+                    return;
+                }
+                window.location.href = "events.html";
+            });
+        </script>
+    </body>
+</html>

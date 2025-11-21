@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Profile</title>
+        <meta name = "viewport" content = "widt = device-width, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css">
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Events</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">Profile</h1>
+            <p class = "page-subtitle">
+                Manage Your Interests and See Organizations You Follow
+            </p>
+
+            <div class = "card">
+                <div class = "card-header">
+                    <div class = "card-title">Your Academic Interests</div>
+                </div>
+
+                <div class = "card-body">
+                    <p>Select the Academic Fields That Best Match Your Interests</p>
+                    <div id = "profile-degrees-container"></div>
+                    <button class="button" id = "save-degrees-btn" style = "margin-top: 8px;">
+                        Save Preferences
+                    </button>
+                    <p id = "degrees-status" style = "margin-top: 6px; font-size: 13px;"></p>
+                </div>
+            </div>
+
+
+            <div class = "card" id = "followed-organizations-card">
+                <div class = "card-header">
+                    <div class = "card-title">Organizations You Follow</div>
+                </div>
+
+                <div class = "card-body" id = "followed-organizations-list">
+                    <p>
+                        Loading Your Organizations...
+                    </p>
+                </div>
+
+                <div class = "card-header">
+                    <div class = "card-title">Upcoming Events from Your Organizations</div>
+                </div>
+
+                <div class = "card-body" id = "followed-events-list">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+        <script src = "/static/javascript/profile.js"></script>
+    </body>
+</html>

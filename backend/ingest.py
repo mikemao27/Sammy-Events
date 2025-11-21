@@ -1,10 +1,12 @@
 # Getting event data from events.rice.edu and OwlNest.
 import sqlite3
+import os
 from datetime import datetime, timezone
 from bs4 import BeautifulSoup
 import feedparser
 
-DATABASE_PATH = "database/events.db"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATABASE_PATH = os.path.join(BASE_DIR, "database", "events.db")
 EVENTS_RSS_URL = "https://events.rice.edu/live/rss/events/header/All%20Events"
 OWL_NEST_RSS_URL = "https://owlnest.rice.edu/events.rss"
 
@@ -140,6 +142,15 @@ def map_organizations(organizations_map):
     connection.commit()
     connection.close() 
 
+def has_free_food(entry):
+    tags = getattr(entry, "tags", [])
+    for tag in tags:
+        term = tag.get("term", "").strip().lower()
+        if term == "Free Food":
+            return True
+    
+    return False
+
 # Rice Events Page Helper Methods.
 def parse_events_description(html: str) -> str | None:
     if not html:
@@ -223,6 +234,8 @@ def parse_rss():
 
         raw_html = getattr(entry, "description", "")
         description, start_time, end_time, location = parse_owlnest_description(raw_html)
+        free_food = has_free_food(entry)
+
 
         events.append({
             "source": "owlnest.rice.edu",
@@ -233,6 +246,7 @@ def parse_rss():
             "start_time": start_time,
             "end_time": end_time,
             "event_location": location,
+            "free_food": free_food
         })
     
     return events
@@ -247,10 +261,10 @@ def insert_events(events):
             """
             INSERT INTO events
                 (source, source_id, title, event_description, source_url,
-                start_time, end_time, event_location)
+                start_time, end_time, event_location, free_food)
             VALUES
                 (:source, :source_id, :title, :event_description, :source_url,
-                :start_time, :end_time, :event_location)
+                :start_time, :end_time, :event_location, :free_food)
             ON CONFLICT(source, source_id) DO UPDATE SET
                 title = excluded.title,
                 event_description = excluded.event_description,

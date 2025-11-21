@@ -26,11 +26,12 @@ CREATE TABLE IF NOT EXISTS users (
     netID TEXT NOT NULL,
     email TEXT NOT NULL,
     user_password TEXT NOT NULL,
-    phone_numbrer TEXT,
+    phone_number TEXT,
 
-    degree TEXT,
+    degrees TEXT,
 
-    UNIQUE(netID)
+    UNIQUE(netID),
+    UNIQUE(email)
 );
 
 CREATE TABLE IF NOT EXISTS organization_interests (
@@ -55,6 +56,14 @@ CREATE TABLE IF NOT EXISTS academic_fields (
     degree_name TEXT NOT NULL,
 
     UNIQUE(degree_name)
+);
+
+CREATE TABLE IF NOT EXISTS user_academic_fields (
+    user_id INTEGER NOT NULL,
+    academic_field_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, academic_field_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (academic_field_id) REFERENCES academic_fields(id)
 );
 
 CREATE TABLE IF NOT EXISTS organization_academic_fields (

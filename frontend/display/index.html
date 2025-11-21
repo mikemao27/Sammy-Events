@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Sammy's Nest</title>
+        <meta name = "viewport" content = "width = device-wdith, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap" 
+            rel="stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css"/>
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Nest</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">Sammy's Nest</h1>
+            <p class = "page-subtitle">Your Rice University Event and Organization Discovery Hub</p>
+
+            <div class = "card">
+                <div class = "card-header">
+                    <div class = "card-title">Get Started</div>
+                </div>
+                <div class = "card-body">
+                    <p>
+                        Log in to See Events Curated From Rice Events and OwlNest
+                        Filter by Your Interests and Find Organizations That Match Your Academic Fields
+                    </p>
+                    
+                    <button class = "button" onclick = "window.location.href = 'login.html'">
+                        Log In or Sign Up
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+    </body>
+</html>

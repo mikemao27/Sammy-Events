@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Events</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css">
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Events</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">Events</h1>
+            <p class = "page-subtitle">
+                Upcoming Events from Rice Events and OwlNest
+            </p>
+
+            <div style = "margin-bottom: 16px;">
+                <label for = "event-field-filter">Filter By Academic Fields</label>
+                <select id = "event-field-filter">
+                    <option value = "">All Fields</option>
+                </select>
+
+                <label style = "margin-left: 16px;">
+                    <input type = "checkbox" id = "free-food-toggle">
+                    Free Food
+                </label>
+            </div>
+
+            <div id = "events-list">
+                <p>Loading events...</p>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+        <script src = "/static/javascript.events.js"></script>
+    </body>
+</html>

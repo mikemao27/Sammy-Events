@@ -1,6 +1,9 @@
 import sqlite3
+import os
 
-connection = sqlite3.connect("database/events.db")
+DATABASE_PATH = "database/events.db"
+
+connection = sqlite3.connect(DATABASE_PATH)
 cursor = connection.cursor()
 cursor.execute("DELETE FROM events;")
 connection.commit()

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Sign Up</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css">
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Nest</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">Create an Account</h1>
+            <p class = "page-subtitle">
+                Create an account to start using Sammy's Nest.
+            </p>
+
+            <div class = "form-card">
+                <form id = "signup-form">
+                    <div class = "form-field">
+                        <label for = "first_name">First Name</label>
+                        <input type = "text" id = "first_name" name = "first_name" required/>
+                    </div>
+                    
+                    <div class = "form-field">
+                        <label for = "last_name">Last Name</label>
+                        <input type = "text" id = "last_name" name = "last_name" required/>
+                    </div>
+                    
+                    <div class = "form-field">
+                        <label for = "netID">Rice University NetID</label>
+                        <input type = "text" id = "netID" name = "netID" required/>
+                    </div>
+
+                    <div class = "form-field">
+                        <label for = "email">Email</label>
+                        <input type = "text" id = "email" name = "email" required/>
+                    </div>
+
+                    <div class = "form-field">
+                        <label for = "password">Password</label>
+                        <input type = "text" id = "password" name = "password" required/>
+                    </div>
+
+                    <div class = "form-field">
+                        <label for = "phone_number">Phone Number</label>
+                        <input type = "text" id = "phone_number" name = "phone_number" required/>
+                    </div>
+
+                    <div class = "form-field">
+                        <label>Majors/Fields of Study (Select One or More)</label>
+                        <div id = "degrees-container"></div>
+                        <small style = "font-size: 12px; color: #555;">
+                            Choose Majors and Fields of Study Helps Personalize Organizations and Events Show to You
+                        </small>
+                    </div>
+
+                    <button type = "submit" class = "button">Create Account</button>
+
+                    <div id = "signup-message" class = "form-footer"></div>
+
+                    <div class = "form-footer">
+                        Already Have an Account,
+                        <a href = "login.html">Log In</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+        <script src = "/static/javascript/signup.js"></script>
+    </body>
+</html>

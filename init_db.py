@@ -1,6 +1,8 @@
 import sqlite3
 
-connection = sqlite3.connect("database/events.db")
+DATABASE_PATH = "database/events.db"
+
+connection = sqlite3.connect(DATABASE_PATH)
 cursor = connection.cursor()
 
 with open("database/schema.sql") as file:

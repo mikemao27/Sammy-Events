@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>About Us</title>
+        <meta name = "viewport" connect = "width = device-width, initial-scale = 1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" corssorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel = "stylesheet" href = "/static/css/styles.css">
+    </head>
+
+    <body class = "page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "/">Sammy's Events</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "about.html">About Us</a>
+                    <a class = "protected" href = "events.html">Events</a>
+                    <a class = "protected" href = "organizations.html">Clubs & Organizations</a>
+                    <a class = "protected" href = "profile.html">Profile</a>
+                    <a id = "login_link" class = "primary-btn" href = "login.html">Log In</a>
+                    <a id = "logout_link" class = "primary-btn protected" style = "display:none;" href = "#">Log Out</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class = "page-content">
+            <h1 class = "page-title">About Us</h1>
+            <p class = "page-subtitle">
+                Insert about us statement here!
+            </p>
+
+            <div class = "card">
+                <div class = "card-body">
+                    <p>
+                        Sammy's Nest consolidates events from Rice Events and OwlNest in one interface.
+                        Out goal is to make it accessible and simple for you to:
+                    </p>
+
+                    <ul>
+                        <li>Discover events relevant to your academic interests</li>
+                        <li>Find organizations that match your major(s) and communiities</li>
+                        <li>Never miss free food or development opportunities again</li>
+                    </ul>
+
+                    <p>
+                        Behind the scenes, Sammy's Nest regularly ingests events, maps organizations to academic
+                        fields, and lets you personalize what you see based on your preferences.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <script src = "/static/javascript/auth.js"></script>
+    </body>
+</html>
