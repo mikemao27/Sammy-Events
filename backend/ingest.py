@@ -254,6 +254,10 @@ def parse_rss():
         location = get_event_location(entry)
 
         location = capitalize_location(location)
+        if location:
+            location = location.upper()
+        else:
+            location = "TBD"
 
         events.append({
             "source": "events.rice.edu",
@@ -278,6 +282,10 @@ def parse_rss():
         free_food = has_free_food(entry)
 
         location = capitalize_location(location)
+        if location:
+            location = location.upper()
+        else:
+            location = "TBD"
 
         hosts = get_owlnest_hosts(entry)
         organization_id = get_organization_id_for_hosts(hosts)

@@ -118,7 +118,6 @@ header {
 
 /* GET STARTED BUTTON (handles typo variants) */
 
-.get-started-button,
 .get-started_button {
     display: inline-flex;
     align-items: center;
@@ -134,7 +133,6 @@ header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
-.get-started-button:hover,
 .get-started_button:hover {
     background: #e6ecf5;
     color: #001638;

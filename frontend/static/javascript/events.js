@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const params = new URLSearchParams();
-            const freeFoodOnly = freeFoodToggle.checked;
+            const freeFoodOnly = freeFoodToggle.classList.contains("active");
 
             if (freeFoodOnly) {
                 params.set("free_food", "1");
@@ -139,10 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    freeFoodToggle.addEventListener("change", () => {
+    freeFoodToggle.addEventListener("click", () => {
+        freeFoodToggle.classList.toggle("active");
         displayLimit = 50;
         loadEvents();
     });
+
 
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener("click", () => {
