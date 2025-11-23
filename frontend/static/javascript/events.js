@@ -3,68 +3,33 @@ let displayLimit = 10;
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("events-container");
-    const fieldSelect = document.getElementById("event-field-filter");
     const freeFoodToggle = document.getElementById("free-food-toggle");
     const loadMoreBtn = document.getElementById("load-more-events");
 
-    if (!container || !fieldSelect || !freeFoodToggle) return;
-
-    function extractFieldName(obj) {
-        if (!obj || typeof obj !== "object") return null;
-
-        if (obj.degree_name) return obj.degree_name;
-        if (obj.name) return obj.name;
-
-        for (const [k, v] of Object.entries(obj)) {
-            const key = k.toLowerCase();
-            if ((key.includes("degree") || key.includes("field")) && typeof v === "string") {
-                return v;
-            }
-        }
-
-        for (const v of Object.values(obj)) {
-            if (typeof v === "string") return v;
-        }
-
-        return null;
-    }
-
-    async function loadAcademicFields() {
-        try {
-            const res = await fetch("/api/academic-fields", { credentials: "include" });
-            if (!res.ok) throw new Error("Failed to load academic fields");
-            const fields = await res.json();
-
-            while (fieldSelect.options.length > 1) {
-                fieldSelect.remove(1);
-            }
-
-            const names = new Set();
-            fields.forEach(f => {
-                const name = extractFieldName(f);
-                if (name) names.add(name);
-            });
-
-            Array.from(names)
-                .sort()
-                .forEach(name => {
-                    const option = document.createElement("option");
-                    option.value = name;
-                    option.textContent = name;
-                    fieldSelect.appendChild(option);
-                });
-        } catch (err) {
-            console.error("Error loading academic fields for events filter:", err);
-        }
-    }
+    if (!container || !freeFoodToggle) return;
 
     async function loadEvents() {
         container.textContent = "Loading Events...";
+
         try {
-            const response = await fetch("/api/events", { credentials: "include" });
+            const params = new URLSearchParams();
+            const freeFoodOnly = freeFoodToggle.checked;
+
+            if (freeFoodOnly) {
+                params.set("free_food", "1");
+            }
+
+            const url = params.toString()
+                ? `/api/events?${params.toString()}`
+                : "/api/events";
+
+            const response = await fetch(url, { credentials: "include" });
             if (!response.ok) throw new Error("Network Response Error");
+
             allEvents = await response.json();
+            displayLimit = 50;
             renderFiltered();
+
         } catch (error) {
             console.error(error);
             container.textContent = "Failed to Load Events";
@@ -129,29 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderFiltered() {
-        const field = fieldSelect.value;
-        const freeFoodOnly = freeFoodToggle.checked;
-
         let events = allEvents.slice();
-
-        if (field) {
-            events = events.filter(event => {
-                const fieldsStr = event.academic_fields || "";
-                const fields = fieldsStr
-                    .split(",")
-                    .map(s => s.trim())
-                    .filter(Boolean);
-                return fields.includes(field);
-            });
-        }
-
-        if (freeFoodOnly) {
-            events = events.filter(event =>
-                event.free_food === 1 ||
-                event.free_food === true ||
-                event.free_food === "1"
-            );
-        }
 
         if (events.length === 0) {
             container.innerHTML = "No Events Match This Filter";
@@ -192,22 +135,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (loadMoreBtn) {
-            if (visible.length < events.length) {
-                loadMoreBtn.style.display = "inline-block";
-            } else {
-                loadMoreBtn.style.display = "none";
-            }
+            loadMoreBtn.style.display = visible.length < events.length ? "inline-block" : "none";
         }
     }
 
-    fieldSelect.addEventListener("change", () => {
-        displayLimit = 10;
-        renderFiltered();
-    });
-
     freeFoodToggle.addEventListener("change", () => {
-        displayLimit = 10;
-        renderFiltered();
+        displayLimit = 50;
+        loadEvents();
     });
 
     if (loadMoreBtn) {
@@ -217,6 +151,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    loadAcademicFields();
     loadEvents();
 });

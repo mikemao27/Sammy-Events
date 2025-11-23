@@ -103,70 +103,69 @@ def api_user():
 @app.route("/api/events")
 def api_events():
     connection = get_database()
+    connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
 
     user_id = session.get("user_id")
-    field_filter = request.args.get("field")
-    free_food_only = request.args.get("free_food") == "1"
-
     user_id_param = user_id if user_id is not None else -1
+
+    field_id = request.args.get("field_id", type = int)
+    free_food_only = request.args.get("free_food") == "1"
 
     params = [user_id_param]
     conditions = []
-    
-    base = """
-        SELECT
-            event.id,
-            event.title,
-            event.event_description,
-            event.start_time,
-            event.end_time,
-            event.event_location,
-            event.source,
-            event.source_url,
-            event.free_food,
-            organization.title AS organization_name,
-            GROUP_CONCAT(academic_field.degree_name, ', ') AS academic_fields,
-            CASE
-                WHEN organization_interest.user_id IS NULL THEN 0
-                ELSE 1
-            END AS followed
-        FROM events AS event
-        LEFT JOIN organizations AS organization
-            ON event.organization_id = organization.id
-        LEFT JOIN organization_academic_fields AS organization_academic_field
-            ON organization.id = organization_academic_field.organization_id
-        LEFT JOIN academic_fields AS academic_field
-            ON organization_academic_field.academic_field_id = academic_field.id
-        LEFT JOIN organization_interests AS organization_interest
-            ON organization_interest.organization_id = organization.id
-            AND organization_interest.user_id = ?
-        """
-    
-    conditions.append("(event.start_time IS NULL OR event.start_time >= datetime('now'))")
 
-    if field_filter:
-        conditions.append("academic_field.degree_name = ?")
-        params.append(field_filter)
-    
+    if field_id is not None:
+        conditions.append("academic_fields.id = ?")
+        params.append(field_id)
+
     if free_food_only:
-        conditions.append("event.free_food = 1")
+        conditions.append("events.free_food = 1")
 
+    conditions.append("(events.start_time IS NULL OR events.start_time >= datetime('now'))")
+
+    base_query = ""
     if conditions:
-        base += "WHERE " + " AND ".join(conditions)
+        base_query = "WHERE " + " AND ".join(conditions)
 
-    base += """
-        GROUP BY event.id
-        ORDER BY followed DESC,
-            event.start_time IS NULL,
-            event.start_time ASC
-        LIMIT 500
+    query = f"""
+        SELECT
+            events.id,
+            events.title,
+            events.event_description,
+            events.source_url,
+            events.start_time,
+            events.end_time,
+            events.event_location,
+            events.source,
+            events.free_food,
+            organizations.title AS organization_name,
+            GROUP_CONCAT(academic_fields.degree_name, ', ') AS academic_fields,
+            CASE WHEN 
+                organization_interests.user_id IS NULL THEN 0 
+                ELSE 1 
+            END AS followed
+        FROM events
+        LEFT JOIN organizations
+            ON events.organization_id = organizations.id
+        LEFT JOIN organization_academic_fields
+            ON organizations.id = organization_academic_fields.organization_id
+        LEFT JOIN academic_fields
+            ON organization_academic_fields.academic_field_id = academic_fields.id
+        LEFT JOIN organization_interests
+            ON organization_interests.organization_id = organizations.id
+            AND organization_interests.user_id = ?
+        {base_query}
+        GROUP BY events.id
+        ORDER BY events.start_time IS NUll, events.start_time;
     """
 
-    cursor.execute(base, params)
+    cursor.execute(query, params)
     rows = [dict(row) for row in cursor.fetchall()]
     connection.close()
+
     return jsonify(rows)
+
 
 @app.route("/api/events/followed")
 def api_events_followed():

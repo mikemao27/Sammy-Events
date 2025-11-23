@@ -25,7 +25,7 @@ def create_organization(title, description, academic_fields):
     for academic_field in academic_fields:
         cursor.execute(
             """
-            INSERT OR IGNORE INTO organization_academic_fields (organization_id, academic_fields) VALUES (?, ?)
+            INSERT OR IGNORE INTO organization_academic_fields (organization_id, academic_field_id) VALUES (?, ?)
             """,
             (organization_id, academic_field)
         )
@@ -209,7 +209,7 @@ def get_followed_organizations(user_id):
         (user_id,),
     )
 
-    rows = [dict[row] for row in cursor.fetchall()]
+    rows = [dict(id = row, title = row[1], organization_description = row[2]) for row in cursor.fetchall()]
     connection.close()
     return rows
 

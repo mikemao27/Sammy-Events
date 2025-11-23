@@ -117,6 +117,39 @@ def get_organization_id(name):
         return None
     return result[0]
 
+def get_owlnest_hosts(entry):
+    hosts = []
+
+    for key, value in entry.items():
+        if "host" not in key.lower():
+            continue
+
+        values = value if isinstance(value, list) else [value]
+
+        for val in values:
+            if isinstance(val, dict) and "value" in val:
+                name = str(val["value"]).strip()
+            else:
+                name = str(val).strip()
+            if name:
+                hosts.append(name)
+        
+    seen, result = set(), []
+    for host in hosts:
+        if host not in seen:
+            seen.add(host)
+            result.append(host)
+    
+    return result
+
+def get_organization_id_for_hosts(host_names):
+    for host in host_names:
+        organization_id = get_organization_id(host)
+        if organization_id is not None:
+            return organization_id
+    
+    return None
+
 def map_organizations(organizations_map):
     connection = get_connection()
     cursor = connection.cursor()
@@ -145,8 +178,9 @@ def map_organizations(organizations_map):
 def has_free_food(entry):
     tags = getattr(entry, "tags", [])
     for tag in tags:
-        term = tag.get("term", "").strip().lower()
-        if term == "Free Food":
+        term = (tag.get("term") or "").strip().lower()
+        label = (tag.get("label") or "").strip().lower()
+        if "free food" in term or "free food" in label:
             return True
     
     return False
@@ -245,6 +279,9 @@ def parse_rss():
 
         location = capitalize_location(location)
 
+        hosts = get_owlnest_hosts(entry)
+        organization_id = get_organization_id_for_hosts(hosts)
+
         events.append({
             "source": "owlnest.rice.edu",
             "source_id": link,
@@ -254,7 +291,8 @@ def parse_rss():
             "start_time": start_time,
             "end_time": end_time,
             "event_location": location,
-            "free_food": free_food
+            "free_food": free_food,
+            "organization_id": organization_id,
         })
     
     return events
@@ -265,21 +303,25 @@ def insert_events(events):
     cursor = connection.cursor()
 
     for event in events:
+        if "organization_id" not in event:
+            event["organization_id"] = None
+
         cursor.execute(
             """
             INSERT INTO events
                 (source, source_id, title, event_description, source_url,
-                start_time, end_time, event_location, free_food)
+                start_time, end_time, event_location, free_food, organization_id)
             VALUES
                 (:source, :source_id, :title, :event_description, :source_url,
-                :start_time, :end_time, :event_location, :free_food)
+                :start_time, :end_time, :event_location, :free_food, :organization_id)
             ON CONFLICT(source, source_id) DO UPDATE SET
                 title = excluded.title,
                 event_description = excluded.event_description,
                 source_url = excluded.source_url,
                 start_time = excluded.start_time,
                 end_time = excluded.end_time,
-                event_location = excluded.event_location;
+                event_location = excluded.event_location,
+                organization_id = excluded.organization_id
             """,
             event,
         )
