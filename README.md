@@ -1,5 +1,5 @@
 ## Events Nest Mobile and Web App
-This is a personal mobile and web application built by Rice University undergrads during moments of peace and quiet.While this project is open-source and anyone may borrow code or inspiration from Events Nest, we would like for credit to be given for the production and launch of Events Nest.
+This is a personal mobile and web application built by Rice University undergrads during moments of peace and quiet. While this project is open-source and anyone may borrow code or inspiration from Events Nest, we would like for credit to be given for the production and launch of Events Nest.
 
 ## Goal of Events Nest
 Events Nest aims to be an all-in-one hub for Rice University students to find and engage in campus events related to their major, minor, degree, or extra-curricular interests. Currently, campus events are isolated in private mailing lists, 
