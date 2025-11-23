@@ -269,7 +269,7 @@ def parse_rss():
             "end_time": end_time,
             "event_location": location,
             "free_food": False,
-            "organization_id": 1
+            "organization_id": 441
         })
     
     # OwlNest Events Page.

@@ -47,7 +47,7 @@
             <p class = "page-subtitle">
                 Explore Rice University Clubs and Organizations and Filter by Academic Field
             </p>
-            
+
             <div style = "margin-bottom: 16px;">
                 <label for = "field-filter">Filter by Academic Fields</label>
                 <select id = "field-filter">
@@ -58,6 +58,10 @@
             <div style = "margin-bottom: 16px;">
                 <label for = "org-search">Search Organizations</label>
                 <input type = "text" id = "org-search" placeholder = "Search Organizations by Name" style = "width: 100%; max-width: 320px;">
+            </div>
+
+            <div style = "margin-bottom: 16px;">
+                <button class = "button" onclick="window.location.href='create_organization.html'">Create New Organization</button>
             </div>
 
             <div id = "organizations-container" class = "organization-grid"></div>

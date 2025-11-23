@@ -473,7 +473,13 @@ label[for="org-search"] {
 .free-food-container {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+}
+
+.event-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
 }
 
 /* FILTERS / SEARCH INPUTS */

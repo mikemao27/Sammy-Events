@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
     <head>
-        <meta charset = "UTF-8"/>
-        <title>Events</title>
-        <meta name = "viewport" content = "width=device-width, initial-scale=1"/>
+        <meta charset="UTF-8" />
+        <title>Create Organization</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
         <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
         <link 
             href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
             rel = "stylesheet" 
         />
-        <link rel = "stylesheet" href = "/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/styles.css" />
     </head>
 
-    <body class = "page">
+    <body class="page">
         <header>
             <nav class = "navigation_bar">
                 <a class = "logo" href = "index.html">Sammy's Nest</a>
@@ -42,33 +42,35 @@
             </nav>
         </header>
 
-        <main class = "page-content">
-            <h1 class = "page-title">Events</h1>
+        <main class="page-content">
+            <h1 class="page-title">Create a New Organization</h1>
             <p class = "page-subtitle">
-                Upcoming Events from Rice Events and OwlNest
-            </p>
-            <p class = "page-subtitle">
-                Use the Free Food Filter to Find Events to Satisfy Your Hunger
+                Fill out the form below to create a new organization.
             </p>
 
-            <div class="event-controls" style="margin-bottom: 16px;">
-                <button class="button" onclick="window.location.href='create_event.html'">
-                    Create New Event
-                </button>
+            <div class="form-card">
+                <form id="create-org-form">
+                     <div class="form-field">
+                        <label for="org_title">Name</label>
+                        <input id="org_title" required />
+                    </div>
 
-                <button id="free-food-toggle" class="button">
-                    Free Food Events Only
-                </button>
-            </div>
+                    <div class="form-field">
+                        <label for="org_description">Description</label>
+                        <input id="org_description" />
+                    </div>
 
-            <div id = "events-container" class = "events-grid"></div>
+                    <div class="form-field">
+                        <label>Academic Fields</label>
+                        <div id="org-fields-container"></div>
+                    </div>
 
-            <div style = "text-align:center; margin-top: 16px;">
-                <button id = "load-more-events" class = "button">Show More Events</button>
+                    <button type="submit" class="button">Create Organization</button>
+                </form>
             </div>
         </main>
 
-        <script src = "/static/javascript/auth.js"></script>
-        <script src = "/static/javascript/events.js"></script>
+        <script src="/static/javascript/auth.js"></script>
+        <script src="/static/javascript/create_organization.js"></script>
     </body>
 </html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Create Event</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel = "preconnect" href = "https://fonts.googleapis.com"/>
+        <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin/>
+        <link 
+            href = "https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel = "stylesheet" 
+        />
+        <link rel="stylesheet" href="/static/css/styles.css" />
+    </head>
+
+    <body class="page">
+        <header>
+            <nav class = "navigation_bar">
+                <a class = "logo" href = "index.html">Sammy's Nest</a>
+
+                <div class = "navigation_links" id = "navigation_links">
+                    <a href = "index.html" class = "nav-home">Home</a>
+
+                    <a href = "events.html" class = "nav-signed-in" style = "display:none;">Events</a>
+                    <a href = "organizations.html" class = "nav-signed-in" style = "display:none;">Organizations</a>
+
+                    <a href = "login.html" id = "nav-login" class = "nav-signed-out">Log In</a>
+
+                    <a href = "about.html">About Us</a>
+
+                    <a href = "profile.html" id = "nav-profile" class = "nav-signed-in">
+                        <img src = "/static/images/Sammy_Owl.jpg" alt = "profile" style = "height:32px; border-radius:50%;">
+                    </a>
+                </div>
+
+                <button
+                    id = "screenreader-toggle"
+                    type = "button"
+                    class = "button-outline"
+                > Enable Screen Reader
+                </button>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1 class="page-title">Create a New Event</h1>
+            <p class = "page-subtitle">
+                Fill out the form below to create a new event.
+            </p>  
+
+            <div class="form-card">
+                <form id="create-event-form">
+                    <div class="form-field">
+                        <label for="title">Title</label>
+                        <input id="title" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="description">Description</label>
+                        <input id="description" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="start_time">Start Time</label>
+                        <input id="start_time" type="datetime-local" />
+                        <small id="start_time_preview" class="help-text"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="end_time">End Time</label>
+                        <input id="end_time" type="datetime-local" />
+                        <small id="end_time_preview" class="help-text"></small>
+                    </div>
+
+
+                    <div class="form-field">
+                        <label for="location">Location</label>
+                        <input id="location" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="organization_name">Organization Name</label>
+                        <input id="organization_name" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>
+                        <input type="checkbox" id="free_food" />
+                        Free Food
+                        </label>
+                    </div>
+
+                    <button type="submit" class="button">Create Event</button>
+                </form>
+            </div>
+        </main>
+
+        <script src="/static/javascript/auth.js"></script>
+        <script src="/static/javascript/create_event.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const startInput = document.getElementById("start_time");
+                const endInput = document.getElementById("end_time");
+                const startPreview = document.getElementById("start_time_preview");
+                const endPreview = document.getElementById("end_time_preview");
+
+                function toLocalDateTimeString(value) {
+                    if (!value) return "";
+                    const date = new Date(value);
+                    if (Number.isNaN(date.getTime())) return "";
+                    return date.toLocaleString();
+                }
+
+                (function setDefaults() {
+                    const now = new Date();
+                    const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+                    const localISO = new Date(now.getTime() - offsetMs).toISOString().slice(0, 16);
+                    const localISOPlus1 = new Date(now.getTime() + 60 * 60 * 1000 - offsetMs)
+                        .toISOString()
+                        .slice(0, 16);
+
+                    if (startInput && !startInput.value) startInput.value = localISO;
+                    if (endInput && !endInput.value) endInput.value = localISOPlus1;
+                })();
+
+                function wirePreview(input, preview) {
+                    if (!input || !preview) return;
+                    const update = () => {
+                        preview.textContent = input.value
+                            ? "Will show as: " + toLocalDateTimeString(input.value)
+                            : "";
+                    };
+                    input.addEventListener("input", update);
+                    update();
+                }
+
+                wirePreview(startInput, startPreview);
+                wirePreview(endInput, endPreview);
+            });
+        </script>
+    </body>
+</html>

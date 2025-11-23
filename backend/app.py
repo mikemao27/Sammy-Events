@@ -1,7 +1,14 @@
 import sqlite3
 import os
 from flask import Flask, jsonify, request, session, render_template, send_from_directory
-from db_operations import get_academic_fields, get_user_degrees, set_user_degrees, verify_password
+from db_operations import (
+    get_academic_fields, 
+    get_user_degrees, 
+    set_user_degrees, 
+    verify_password,
+    create_event,
+    create_organization,
+)
 
 app = Flask(__name__, static_folder = "../frontend", template_folder = "../frontend/display")
 
@@ -193,8 +200,9 @@ def api_events_followed():
         JOIN organization_interests organization_interest
             ON organization_interest.organization_id = organization.id
             AND organization_interest.user_id = ?
+        WHERE (event.start_time IS NULL OR event.start_time >= datetime('now'))
         ORDER BY event.start_time IS NULL, event.start_time ASC
-        LIMIT 50
+        LIMIT 5
         """,
         (user_id,),
     )
@@ -336,6 +344,58 @@ def api_user_degrees():
     set_user_degrees(user_id, degree_ids)
     return jsonify({"ok": True})
 
+@app.route("/api/organizations/create", methods=["POST"])
+def api_create_organization():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"ok": False, "error": "Authentication Eequired"}), 401
+
+    data = request.get_json() or {}
+    title = (data.get("title") or "").strip()
+    description = (data.get("description") or "").strip()
+    academic_field_ids = data.get("academic_field_ids") or []
+
+    if not title:
+        return jsonify({"ok": False, "error": "Organization Name is Required"}), 400
+
+    academic_field_ids = [
+        int(x) for x in academic_field_ids if str(x).isdigit()
+    ]
+
+    create_organization(title, description, academic_field_ids)
+    return jsonify({"ok": True})
+
+@app.route("/api/events/create", methods=["POST"])
+def api_create_event():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"ok": False, "error": "Authentication Required"}), 401
+
+    data = request.get_json() or {}
+    title = (data.get("title") or "").strip()
+    description = (data.get("description") or "").strip()
+    start_time = (data.get("start_time") or "").strip() or None
+    end_time = (data.get("end_time") or "").strip() or None
+    location = (data.get("location") or "").strip()
+    org_name = (data.get("organization_name") or "").strip()
+    free_food = bool(data.get("free_food"))
+
+    if not title:
+        return jsonify({"ok": False, "error": "Event Name is Required"}), 400
+
+    # Uses existing helper in db_operations.py
+    create_event(
+        title,
+        description,
+        start_time,
+        end_time,
+        location,
+        1 if free_food else 0,
+        org_name,
+    )
+    return jsonify({"ok": True})
+
+
 @app.route("/")
 def index_page():
     return render_template("index.html")
@@ -367,6 +427,14 @@ def profile_page():
 @app.route("/signup.html")
 def signup_page():
     return render_template("signup.html")
+
+@app.route("/create_event.html")
+def create_event_page():
+    return render_template("create_event.html")
+
+@app.route("/create_organization.html")
+def create_org_page():
+    return render_template("create_organization.html")
 
 if __name__ == "__main__":
     app.run(debug = True)

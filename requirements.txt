@@ -1,0 +1,5 @@
+# Please install all required packages before running the backend code.
+Flask == 3.0.3
+bcrypt == 4.1.2
+beautifulsoup4 == 4.12.3
+feedparser == 6.0.11
